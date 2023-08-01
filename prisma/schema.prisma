@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Crosswalk {
+  id          Int      @id @default(autoincrement())
+  userId      String   // email from next auth
+  userName    String   // name from next auth
+  latitude    Float
+  longitude   Float
+  address     String
+  description String
+  votes       Int
+  createdAt   DateTime @default(now()) 
+  updatedAt   DateTime @default(now())
+  @@index([userId], name: "crosswalks.userId")
+}
+
+model UserVote {
+  id          Int      @id @default(autoincrement())
+  userId      String   @unique
+  upvoted     Int[]    // crosswalk IDs, but not relation
+  downvoted   Int[]
+}
